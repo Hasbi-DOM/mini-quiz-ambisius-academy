@@ -24,8 +24,8 @@ export default function Auth() {
 		setMode(false)
 	}
 	return (
-    <div className="min-h-screen py-4 flex items-center justify-center">
-		<main className="flex flex-col items-center space-y-8 min-w-lg">
+    <div className="min-h-screen flex flex-col items-center justify-center">
+		<div className="flex flex-col items-center space-y-8 min-w-lg">
 			<div className="w-full flex flex-col justify-center items-center">
 				<Image
 					src="/logo.svg"
@@ -71,7 +71,7 @@ export default function Auth() {
 					</div>
 				</div>
 			</div>
-		</main>
+		</div>
     </div>
 	);
 }
