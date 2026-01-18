@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
 			/>
 		</head>
 		<body
-			className={`${arimo.variable} min-h-screen`}
+			className={`${arimo.variable}`}
 		>
 		{children}
 		</body>
