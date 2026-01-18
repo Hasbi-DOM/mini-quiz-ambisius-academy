@@ -8,17 +8,9 @@ export const ButtonFilled = ({children, className}) => {
 	)
 }
 
-export const ButtonBase = ({children}) => {
+export const ButtonBase = ({children, className}) => {
 	return (
-		<button className="py-2 px-3 rounded-lg cursor-pointer flex items-center gap-1 hover:bg-gray-200">
-			{children}
-		</button>
-	)
-}
-
-export const ButtonCard = ({children, className}) => {
-	return (
-		<button className={`border border-gray-200 rounded-lg cursor-pointer space-y-6 transition delay-100 duration-300 ease-in-out hover:shadow-md ${className}`}>
+		<button className={`py-2 px-3 rounded-lg cursor-pointer flex items-center gap-1 ${className}`}>
 			{children}
 		</button>
 	)

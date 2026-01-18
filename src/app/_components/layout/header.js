@@ -1,11 +1,15 @@
+'use client';
 import Image from "next/image"
 import { ButtonBase } from "../button"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export const Header = () => {
+	const pathname = usePathname()
 	const pages = [
-		{icon: 'home', label: 'Dashboard'},
-		{icon: 'history', label: 'Riwayat '},
-		{icon: 'person', label: 'Profil'}
+		{icon: 'home', label: 'Dashboard', link: '/main/dashboard'},
+		{icon: 'history', label: 'Riwayat', link: '/main/history'},
+		{icon: 'person', label: 'Profil', link: '/main/profile'}
 	]
 	return (
 		<div className="relative">
@@ -25,13 +29,18 @@ export const Header = () => {
 				</div>
 				<div className="flex items-center gap-3">
 					{
-						pages.map((info, i) => (
-							<ButtonBase key={i}>
-								<span className="material-symbols-outlined" style={{fontSize: '24px'}}>{info.icon}</span>
-								<p className="text-base">{info.label}</p>
-							</ButtonBase>
-						))
-					}
+						pages.map((info, i) => {
+							const isActive = pathname === info.link
+							return (
+								<Link key={i} href={info.link}>
+									<ButtonBase className={` ${isActive ? 'bg-[#030213] text-white hover:bg-gray-800' : 'hover:bg-gray-200'}`}>
+										<span className="material-symbols-outlined" style={{fontSize: '24px'}}>{info.icon}</span>
+										<p className="text-base">{info.label}</p>
+									</ButtonBase>
+								</Link>
+							)
+						}
+					)}
 				</div>
 				<div className="flex items-center gap-4">
 					<div className="flex flex-col items-end">

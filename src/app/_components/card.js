@@ -1,6 +1,6 @@
 export const BaseCard = ({className, children}) => {
 	return (
-		<div className={`p-6 border border-gray-200 rounded-lg ${className}`}>
+		<div className={`p-6 border border-gray-200 ${className}`}>
 			{children}
 		</div>
 	)
