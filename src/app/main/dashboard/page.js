@@ -1,19 +1,61 @@
+'use client'
 import { ButtonCard, ButtonFilled } from "@/app/_components/button"
 import { AnimationCard, BaseCard, Card } from "@/app/_components/card"
 import { CardInfo } from "@/app/_components/layout/cardInfo"
+import { useProfile } from "@/app/context/profile-context"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
 
 export default function Dashboard () {
+	const router = useRouter()
+	const user = useProfile()
+	const data = user.data
+	const [listSubtests, setListSubtests] = useState([])
+	const [dataQuiz, setDataQuiz] = useState({})
+	const [message, setMessage] = useState('')
 	const cardInfo = [
 		{title: 'Total Subtest Tersedia', icon: 'assignment', value: '3', caption: 'Siap untuk dikerjakan'},
 		{title: 'Rata-rata Durasi', icon: 'access_time', value: '32 min', caption: 'Per subtest'},
 		{title: 'Progress Anda', icon: 'trending_up', value: 'Ambis!🔥', caption: 'Terus tingkatkan'},
 	]
-	
+	useEffect(() => {
+		const getSubtests = async () => {
+			fetch('/api/subtest/list-subtest', {
+				method: 'GET',
+				headers: { 'Content-Type': 'application/json' },
+				credentials: 'include'
+			}) 
+			.then(res => res.json())
+			.then(result => {
+				setListSubtests(result.data.data)
+			})
+		}
+		getSubtests()
+	}, [])
+
+	const handleStartQuiz = async (val) => {
+		// try {
+		// 	const res = await fetch(`/api/subtest/start-quiz?subtest_id=${val}`, {
+		// 		method: 'GET',
+		// 		headers: { 'Content-Type': 'application/json' },
+		// 		credentials: 'include'
+		// 	})
+		// 	const result = await res.json()
+
+		// 	if(!res.ok) {
+		// 		setMessage('Terjadi kesalahan')
+		// 		return
+		// 	}
+			router.push(`/main/quiz/${val}`)
+		// } catch (error) {
+		// 	setMessage('Server error')
+		// }
+	}
 	return (
 		<div className="w-full space-y-8">
 			<div className="space-y-2">
-				<p className="text-4xl font-medium">Halo, Jhon Doe!👋</p>
+				<p className="text-4xl font-medium">{`Halo, ${data.name}!👋`}</p>
 				<p className="text-lg text-[#717182]">Pilih subtest di bawah untuk memulai latihan kuis Anda</p>
 			</div>
 			<button className="w-full flex items-center gap-6">
@@ -33,16 +75,16 @@ export default function Dashboard () {
 				<p className="text-3xl">Subtest Aktif</p>
 				<div className="grid grid-cols-2 gap-6">
 					{
-						[1,2,3].map((index) => (
+						listSubtests.map((info, index) => (
 						<AnimationCard key={index} className={'space-y-6 hover:-translate-y-2'}>
 							<div className="flex flex-col gap-3">
 								<div className="flex items-center justify-between">
-									<p className="text-xl">Verbal Reasoning</p>
+									<p className="text-xl">{info.name}</p>
 									<div className="bg-[#FFF085] rounded-full px-2 py-1">
 										<p className="text-[#894B00] text-xs">Sedang</p>
 									</div>
 								</div>
-								<p className="text-start text-base text-[#717182]">Test kemampuan analisis dan pemahaman bahasa. Mengukur kemampuan logika verbal dan interpretasi teks.</p>
+								<p className="text-start text-base text-[#717182]">{info.description}</p>
 							</div>
 							<div>
 								<div className="flex items-center gap-2">
@@ -54,13 +96,14 @@ export default function Dashboard () {
 									<p className="text-base text-[#717182]">25 menit</p>
 								</div>
 							</div>
-							<Link href={'/quiz'}>
+							{/* <Link href={'/main/quiz'}> */}
 								<ButtonFilled
+									onClick={(val) => handleStartQuiz(info.id, val.target.value)}
 									className={'w-full bg-[#030213]'}
 								>
 									<p className="text-sm">Mulai Kuis</p>
 								</ButtonFilled>
-							</Link>
+							{/* </Link> */}
 						</AnimationCard>
 						))
 					}

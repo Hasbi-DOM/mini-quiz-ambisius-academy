@@ -3,16 +3,35 @@ import { ButtonBase } from "@/app/_components/button";
 import { BaseCard } from "@/app/_components/card";
 import { CardInfo } from "@/app/_components/layout/cardInfo";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function History () {
 	const [expandedIndex, setExpandedIndex] = useState(null)
+	const [dataResults, setDataResults] = useState([])
 	const infoCard = [
 		{title: 'Total Kuis', icon: 'assignment', value: '3', caption: 'Diselesaikan'},
 		{title: 'Rata-rata Skor', icon: 'trending_up', value: '82', caption: 'dari 100'},
 		{title: 'Skor Terbaik', icon: 'emoji_events', value: '90', caption: 'Personal best'},
 		{title: 'Total Soal', icon: 'adjust', value: '60', caption: 'Terjawab'},
 	]
+
+	useEffect(() => {
+		const getHistory = async () => {
+			const res = await fetch('/api/history', {
+				method: 'GET',
+				headers: { 'Content-Type': 'application/json' }
+			})
+
+		if(!res.ok) {
+			setError('Gagal mengambil data')
+			return
+		}
+		const result = await res.json()
+		setDataResults(result.data.data.results)
+		// const quiz = result.data
+	}
+	getHistory()
+	}, [])
 	return (
 		<div className="space-y-8">
 			<div className="flex flex-col gap-2">
@@ -36,7 +55,7 @@ export default function History () {
 				<div className="space-y-4">
 				<p className="text-2xl font-medium">Hasil Kuis</p>
 					{
-						[0,1,2].map((info, i) => {
+						dataResults.map((info, i) => {
 							const isExpanded = expandedIndex === info
 							return (
 								<div key={i} className="hover:border border-gray-400 rounded-lg">
@@ -44,7 +63,7 @@ export default function History () {
 										<BaseCard className={`w-full flex items-center justify-between ${isExpanded ? "rounded-t-lg rounded-b-none" : "rounded-lg"}`}>
 											<div className="space-y-2">
 												<div className="flex items-center gap-3">
-													<p className="text-lg">Verbal Reasoning</p>
+													<p className="text-lg">{info.subtest_name}</p>
 													<div className="px-2 py-1 rounded-full bg-[#B9F8CF]">
 														<p className="text-xs">Excellent</p>
 													</div>
@@ -52,7 +71,15 @@ export default function History () {
 												<div className="flex items-center gap-4">
 													<div className="flex items-center gap-2">
 														<span className="material-symbols-outlined text-[#717182]" style={{fontSize: '20px'}}>calendar_today</span>
-														<p className="text-sm text-[#717182]">5 Jan 2024 • 23.45</p>
+														<p className="text-sm text-[#717182]">{`${new Date(info.completed_at).toLocaleDateString('id-ID', {
+															day: '2-digit',
+															month: 'short',
+															year: 'numeric',
+														})}• 
+														${new Date(info.completed_at).toLocaleTimeString("id-ID", {
+															hour: "2-digit",
+															minute: "2-digit"
+														})}}`}</p>
 													</div>
 													<div className="flex items-center gap-2">
 														<span className="material-symbols-outlined text-[#717182]" style={{fontSize: '20px'}}>adjust</span>
@@ -62,7 +89,7 @@ export default function History () {
 											</div>
 											<div className="flex items-center gap-4">
 												<div className="flex flex-col items-center gap-2">
-													<p className="text-4xl">85</p>
+													<p className="text-4xl">{info.score}</p>
 													<p className="text-xs">Skor</p>
 												</div>
 												{
