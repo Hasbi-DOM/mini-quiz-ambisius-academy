@@ -3,8 +3,11 @@ import Image from "next/image"
 import { ButtonBase } from "../button"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useProfile } from "@/app/context/profile-context";
 
 export const Header = () => {
+	const user = useProfile()
+	const data = user.data
 	const pathname = usePathname()
 	const pages = [
 		{icon: 'home', label: 'Dashboard', link: '/main/dashboard'},
@@ -44,7 +47,7 @@ export const Header = () => {
 				</div>
 				<div className="flex items-center gap-4">
 					<div className="flex flex-col items-end">
-						<p className="text-base">John Doe</p>
+						<p className="text-base">{data?.name}</p>
 						<p className="text-sm">User</p>
 					</div>
 					<div className="w-fit p-2 bg-[#030213] rounded-full flex justify-center">

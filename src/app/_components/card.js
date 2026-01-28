@@ -1,3 +1,4 @@
+"use client"
 export const BaseCard = ({className, children}) => {
 	return (
 		<div className={`p-6 border border-gray-200 ${className}`}>
