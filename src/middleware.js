@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export function middleware(request) {
 	const token = request.cookies.get('access_token')?.value
-	const { pathname } = request.nextUrl
+	const { pathname, searchParams } = request.nextUrl
 
 	if (!token && pathname.startsWith('/main')) {
 		return NextResponse.redirect(new URL('/', request.url))
@@ -16,5 +16,5 @@ export function middleware(request) {
 }
 
 export const config = {
-	matcher: ['/main/:path*', '/']
+	matcher: ['/main/:path*', '/main']
 }
